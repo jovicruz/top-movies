@@ -1,0 +1,6 @@
+ALTER TABLE filme
+DROP COLUMN year;
+
+
+ALTER TABLE filme
+ADD COLUMN year INT;

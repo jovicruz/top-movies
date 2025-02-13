@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${filme.title}"></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<style>
+
+    .titulos{
+        display: flex;
+        flex-direction:column;
+    }
+    .filme-container {
+        display: flex;
+        box-sizing: border-box;
+        /* justify-content: center; */
+        flex-direction: column; 
+        background-size: cover;
+        background-repeat: no-repeat;
+        height: 100vh;
+        width: 100%;
+        
+    }
+    .titulo{
+        color: whitesmoke;
+        margin-block: 0;
+    }
+    .tagline{
+        color:rgba(250, 235, 215, 0.805);
+    }
+    .filme-container img {
+        width: auto;
+    height: 100%;
+    /* display: block; */
+    margin-right: 2%;
+    border-radius: 2%;
+    }
+    .content{
+        display: flex;
+    flex-direction: row;
+    height: 100%;
+    width: fit-content;
+    padding: 4%;
+    box-sizing: border-box;
+    -webkit-backdrop-filter: brightness(55%);
+    backdrop-filter: brightness(55%);
+    }
+    .texto {
+        color: rgb(226, 226, 226);
+    }
+    .nav {
+        background-color: #333;
+        overflow: hidden;
+        padding: 1% 0;
+    }
+    .nav a {
+        float: left;
+        display: block;
+        color: #f2f2f2;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+        font-size: 17px;
+    }
+    .nav a:hover {
+        background-color: #ddd;
+        color: black;
+    }
+    .nav a.active {
+        background-color: #04AA6D;
+        color: white;
+    }
+</style>
+<body style="margin: 0; padding: 0;">
+    <div class="nav">
+        <a th:href="@{/}" th:classappend="${page == 'home'} ? 'active' : ''">Início</a>
+        <a th:href="@{/search}" th:classappend="${page == 'search'} ? 'active' : ''">Pesquisar</a>
+        <a th:href="@{/favoritos}" th:classappend="${page == 'favoritos'} ? 'active' : ''">Favoritos</a>
+    </div>
+
+
+    
+    <div class="filme-container" th:style="'background-image: url(' + '\'https://image.tmdb.org/t/p/original' + ${filme.backdrop_path} + '\')'">
+        <div class="content">
+            <img class="poster" th:src="'https://image.tmdb.org/t/p/original' + ${filme.posterpath}" alt="">
+        
+            <div class="titulos">
+                <h1 class="titulo" th:text="${filme.title} + ' (' + ${filme.year} + ')'"></h1>
+                <span class="tagline" th:text="${filme.tagline}"></span>
+                <span class="texto" th:text="${filme.runtime}"></span>
+                <br><br>
+                <span class="texto" th:text="${filme.genres}"></span>
+                <br>
+                <span class="texto" th:text="${filme.overview}"></span>
+                <br>
+                <div class="flex-wrap	">
+                    <form id="formfav" action="" method="post">
+                        <button id="btnFav" type="submit" class="w-12 h-12 text-sm text-white bg-red-500 hover:bg-red-400 border border-red-500 font-medium rounded-lg p-2 text-center inline-flex items-center">
+                            
+                            <svg id="svgFav"  width="32px" height="32px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> </g></svg>
+
+                            <span hidden id="txtFav" th:text="${favoritado}"></span>
+                            <input type="hidden" id="title" name="title" th:value="${filme.title}">
+                            <input type="hidden" id="posterpath" name="posterpath" th:value="${filme.posterpath}">
+                            <input type="hidden" id="overview" name="overview" th:value="${filme.overview}">
+                            <input type="hidden" id="genres" name="genres" th:value="${filme.genres}">
+                            <input type="hidden" id="tagline" name="tagline" th:value="${filme.tagline}">
+                            <input type="hidden" id="runtime" name="runtime" th:value="${filme.runtime}">
+                            <input type="hidden" id="backdrop_path" name="backdrop_path" th:value="${filme.backdrop_path}">
+                            <input type="hidden" id="year" name="year" th:value="${filme.year}">
+                        </button>
+                    </form>
+
+                    <form id="formChangePoster" action="/editPoster" method="get">
+                        <button id="btnChangePoster" type="submit" class="w-12 h-12 text-sm text-white bg-red-500 hover:bg-red-400 border border-red-500 font-medium rounded-lg p-2 text-center inline-flex items-center">
+                        <br><br><br><br>
+                            <svg width="32" height="32" viewBox="0 0 494.936 494.936" fill="#000000" xmlns="http://www.w3.org/2000/svg">
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                <g id="SVGRepo_iconCarrier">
+                                    <g>
+                                        <path d="M389.844,182.85c-6.743,0-12.21,5.467-12.21,12.21v222.968c0,23.562-19.174,42.735-42.736,42.735H67.157 c-23.562,0-42.736-19.174-42.736-42.735V150.285c0-23.562,19.174-42.735,42.736-42.735h267.741c6.743,0,12.21-5.467,12.21-12.21 s-5.467-12.21-12.21-12.21H67.157C30.126,83.13,0,113.255,0,150.285v267.743c0,37.029,30.126,67.155,67.157,67.155h267.741 c37.03,0,67.156-30.126,67.156-67.155V195.061C402.054,188.318,396.587,182.85,389.844,182.85z"/>
+                                        <path d="M483.876,20.791c-14.72-14.72-38.669-14.714-53.377,0L221.352,229.944c-0.28,0.28-3.434,3.559-4.251,5.396l-28.963,65.069 c-2.057,4.619-1.056,10.027,2.521,13.6c2.337,2.336,5.461,3.576,8.639,3.576c1.675,0,3.362-0.346,4.96-1.057l65.07-28.963 c1.83-0.815,5.114-3.97,5.396-4.25L483.876,74.169c7.131-7.131,11.06-16.61,11.06-26.692 C494.936,37.396,491.007,27.915,483.876,20.791z M466.61,56.897L257.457,266.05c-0.035,0.036-0.055,0.078-0.089,0.107 l-33.989,15.131L238.51,247.3c0.03-0.036,0.071-0.055,0.107-0.09L447.765,38.058c5.038-5.039,13.819-5.033,18.846,0.005 c2.518,2.51,3.905,5.855,3.905,9.414C470.516,51.036,469.127,54.38,466.61,56.897z"/>
+                                    </g>
+                                </g>
+                            </svg>
+                            <input hidden type="text" name="id" th:value="${id}">
+                        </button>
+                    </form>
+
+                <!-- TODO: Função ver mais tarde -->
+                    <!-- 
+                    <button id="btnWatch" type="button" class="w-12 h-12 text-sm text-white bg-sky-500 hover:bg-sky-400 border border-sky-500 font-medium rounded-lg p-2 text-center inline-flex items-center">
+                        <svg id="svgWatch" width="32px" height="32px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12 7V12L14.5 10.5M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                        <span hidden id="txtWatch">Assistir</span>
+                    </button>-->
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    var svgFav = document.getElementById("svgFav");
+    
+    window.onload = function () {
+        console.log(document.getElementById("txtFav").textContent)
+        if (document.getElementById("txtFav").textContent == "false"){
+                document.getElementById("formChangePoster").style.display = "none";
+                svgFav.innerHTML='<path fill-rule="evenodd" clip-rule="evenodd" d="M12 6.00019C10.2006 3.90317 7.19377 3.2551 4.93923 5.17534C2.68468 7.09558 2.36727 10.3061 4.13778 12.5772C5.60984 14.4654 10.0648 18.4479 11.5249 19.7369C11.6882 19.8811 11.7699 19.9532 11.8652 19.9815C11.9483 20.0062 12.0393 20.0062 12.1225 19.9815C12.2178 19.9532 12.2994 19.8811 12.4628 19.7369C13.9229 18.4479 18.3778 14.4654 19.8499 12.5772C21.6204 10.3061 21.3417 7.07538 19.0484 5.17534C16.7551 3.2753 13.7994 3.90317 12 6.00019Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>'   
+            }
+
+        else{
+                svgFav.innerHTML='<path d="M12 6.00011L14 8.00011L10 10.0001L13 13.0001M12 6.00011C10.2006 3.90309 7.19377 3.25515 4.93923 5.17539C2.68468 7.09563 2.36727 10.3062 4.13778 12.5772C5.60984 14.4655 10.0648 18.4479 11.5249 19.7369C11.6882 19.8811 11.7699 19.9532 11.8652 19.9816C11.9483 20.0063 12.0393 20.0063 12.1225 19.9816C12.2178 19.9532 12.2994 19.8811 12.4628 19.7369C13.9229 18.4479 18.3778 14.4655 19.8499 12.5772C21.6204 10.3062 21.3417 7.07543 19.0484 5.17539C16.7551 3.27535 13.7994 3.90309 12 6.00011Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> '
+        } 
+    }
+    var btnFav = document.getElementById("btnFav");
+    var btnWatch = document.getElementById("btnWatch");
+    btnWatch.addEventListener('click',()=>{
+            var svgWatch = document.getElementById("svgWatch");
+            if (document.getElementById("txtWatch").textContent == "Assistir"){
+                svgWatch.innerHTML='<path fill-rule="evenodd" clip-rule="evenodd" d="M12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20C12.5523 20 13 20.4477 13 21C13 21.5523 12.5523 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 12.5523 21.5523 13 21 13C20.4477 13 20 12.5523 20 12C20 7.58172 16.4183 4 12 4ZM12 5C12.5523 5 13 5.44772 13 6V11.5858L13.7071 12.2929C14.0976 12.6834 14.0976 13.3166 13.7071 13.7071C13.3166 14.0976 12.6834 14.0976 12.2929 13.7071L11.2929 12.7071C11.1054 12.5196 11 12.2652 11 12V6C11 5.44772 11.4477 5 12 5ZM16.7071 15.2929C16.3166 14.9024 15.6834 14.9024 15.2929 15.2929C14.9024 15.6834 14.9024 16.3166 15.2929 16.7071L17.5858 19L15.2929 21.2929C14.9024 21.6834 14.9024 22.3166 15.2929 22.7071C15.6834 23.0976 16.3166 23.0976 16.7071 22.7071L19 20.4142L21.2929 22.7071C21.6834 23.0976 22.3166 23.0976 22.7071 22.7071C23.0976 22.3166 23.0976 21.6834 22.7071 21.2929L20.4142 19L22.7071 16.7071C23.0976 16.3166 23.0976 15.6834 22.7071 15.2929C22.3166 14.9024 21.6834 14.9024 21.2929 15.2929L19 17.5858L16.7071 15.2929Z" fill="#000000"></path>'
+                document.getElementById("txtWatch").textContent = "Desassistir";
+            }
+            else{
+                document.getElementById("txtWatch").textContent = "Assistir";
+                svgWatch.innerHTML='<path d="M12 7V12L14.5 10.5M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>'
+            } 
+        })
+</script>
+
+</body>
+</html>
